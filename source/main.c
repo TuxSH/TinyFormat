@@ -53,8 +53,8 @@ int main(int argc, char** argv)
 		}
 		else if (kDown & KEY_Y)
 		{ 
-			printf("ALL YOUR DATA WILL BE DELETED (except on SD Card)\n")
-		        printf("Press again Y format system , START to exit\n")
+			printf("ALL YOUR DATA WILL BE DELETED (except on SD Card)\n");
+			printf("Press again Y format system , START to exit\n");
 			if (kDown & KEY_START)
 			{
 				printf("CANCEL! Exiting...\n");
@@ -71,9 +71,7 @@ int main(int argc, char** argv)
 
 				printf("Wait for system reboot...\n");
 				svcSleepThread(3000000000);
-				aptOpenSession();
-				APT_HardwareResetAsync(NULL);
-				aptCloseSession();
+				APT_HardwareResetAsync();
 			}
 		}
 
