@@ -8,8 +8,7 @@
 #include <string.h>
 #include <3ds.h>
 
-Result
-FS_InitializeCtrFileSystem(Handle handle)
+Result FS_InitializeCtrFileSystem(Handle handle)
 {
 	u32 *cmdbuf = getThreadCommandBuffer();
 
@@ -27,13 +26,12 @@ int main(int argc, char** argv)
 {
 	// Initialize services
 	gfxInitDefault();
-	aptInit();
-	fsInit();
 
 	Result res;
+	u32 step = 1;
 
 	// Init console for text output
-	consoleInit(GFX_BOTTOM, NULL);
+	consoleInit(GFX_TOP, NULL);
 
 	printf("TinyFormat\n");
 	printf("----------\n\n");
@@ -53,23 +51,21 @@ int main(int argc, char** argv)
 		}
 		else if (kDown & KEY_Y)
 		{ 
-			printf("ALL YOUR DATA WILL BE DELETED (except on SD Card)\n");
-			printf("Press again Y format system , START to exit\n");
-			if (kDown & KEY_START)
+			if (step++ == 1)
 			{
-				printf("CANCEL! Exiting...\n");
-				break;
+				printf("ALL YOUR DATA WILL BE DELETED (except on SD Card)\n");
+				printf("Press Y again to format, or START to exit.\n\n");
 			}
-			else if (kDown & KEY_Y)
-			{ 
+			else
+			{
 				printf("InitializeCtrFileSystem. Please wait...\n");
-				res = FS_InitializeCtrFileSystem( *(fsGetSessionHandle()) );
+				res = FS_InitializeCtrFileSystem(*fsGetSessionHandle());
 				if (res == 0)
-				printf("Done!\n");
+					printf("Done!\n");
 				else
-				printf("FAILED!\n");
+					printf("FAILED!\n");
 
-				printf("Wait for system reboot...\n");
+				printf("Waiting for system reboot...\n");
 				svcSleepThread(3000000000);
 				APT_HardwareResetAsync();
 			}
@@ -82,8 +78,6 @@ int main(int argc, char** argv)
 	}
 
 	// Exit services
-	fsExit();
-	aptExit();
 	gfxExit();
 	return 0;
 }
